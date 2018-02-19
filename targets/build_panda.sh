@@ -28,6 +28,7 @@ git submodule update --init dtc
 
 mkdir -p ../../build/panda/panda
 
+sudo chown -R vagrant:vagrant ../../ # i.e. /home/vagrant/avatar2/targets
 
 # here I am in src/avatar-panda
 llvm=0
@@ -48,6 +49,8 @@ if [[ $1 == "build-get-llvm" ]] ; then
     else
         ./configure --enable-optimized --disable-assertions --enable-targets=host,arm && REQUIRES_RTTI=1 make -j $(nproc)
     fi
+    # install llvm3.3 under /usr/local/
+    sudo make install
     cd ../../../src/avatar-panda
 
 else
@@ -62,10 +65,13 @@ else
         else
             ./configure --enable-optimized --disable-assertions --enable-targets=host,arm && REQUIRES_RTTI=1 make -j $(nproc)
         fi
+        # install llvm3.3 under /usr/local/
+        sudo make install
         cd -
     fi
 fi
 
+# it seems the flows does not reach this part
 cd ../../build/panda/panda
 if [[ $llvm -eq 1 ]] ; then  
     ../../../src/avatar-panda/configure --disable-sdl --target-list=arm-softmmu --enable-llvm --with-llvm=/usr/local
