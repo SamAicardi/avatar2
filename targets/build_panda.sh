@@ -5,7 +5,7 @@ ci_distr="Ubuntu 16.04.3 LTS \n \l"
 
 # Usage: ./build_panda.sh [build-llvm | build-get-llvm [enable-llvm-debug]] 
 
-if [[ 1 -eq 0 ]] ; then
+if [[ 0 -eq 0 ]] ; then
     if [[ "$distr" == "$ci_distr" ]]
     then
       echo "deb-src http://archive.ubuntu.com/ubuntu/ xenial-security main restricted" >> /etc/apt/sources.list
