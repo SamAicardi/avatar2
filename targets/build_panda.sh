@@ -69,7 +69,7 @@ if [[ $1 == "build-get-llvm" ]] ; then
 
 else
     if [[ $1 == "build-llvm" ]] ; then 
-        echo -ne "\e[1m[$(basename $0)] LLVM sub-tree already downloaded. Cleaning ... \e[0m"
+        echo -e "\e[1m[$(basename $0)] LLVM sub-tree already downloaded. Cleaning ... \e[0m"
         build_llvm=1
         cd panda/llvm
         make clean
@@ -103,10 +103,10 @@ fi
 #============================================
 cd ../../build/panda/panda
 if [[ $llvm -eq 1 ]] ; then  
-    echo -ne "\e[1m[$(basename $0)] Installing PANDA with LLVM support ...\e[0m"
+    echo -e "\e[1m[$(basename $0)] Installing PANDA with LLVM support ...\e[0m"
     ../../../src/avatar-panda/configure --disable-sdl --target-list=arm-softmmu --enable-llvm --with-llvm=/usr/local
 else
-    echo -ne "\e[1m[$(basename $0)] Installing PANDA (no LLVM support) ...\e[0m"
+    echo -e "\e[1m[$(basename $0)] Installing PANDA (no LLVM support) ...\e[0m"
     ../../../src/avatar-panda/configure --disable-sdl --target-list=arm-softmmu
 fi
 make -j4
