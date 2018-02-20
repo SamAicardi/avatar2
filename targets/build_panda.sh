@@ -22,7 +22,7 @@ then
   sudo apt-get -y install software-properties-common
   sudo add-apt-repository -y ppa:phulin/panda
 
-  sudo apt-get install subversion
+  sudo apt-get -y install subversion
   sudo apt-get -y install libcapstone-dev libdwarf-dev python-pycparser
   
   # TODO: check if required
