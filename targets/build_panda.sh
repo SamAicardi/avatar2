@@ -24,6 +24,9 @@ then
 
   sudo apt-get install subversion
   sudo apt-get -y install libcapstone-dev libdwarf-dev python-pycparser
+  
+  # TODO: check if required
+  sudo apt-get -y install libglib2.0-dev zlib1g-dev
 fi
 
 
