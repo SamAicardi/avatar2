@@ -102,7 +102,7 @@ fi
 #             Install PANDA
 #============================================
 cd ../../build/panda/panda
-if [[ $llvm -eq 1 ]] ; then  
+if [[ $build_llvm -eq 1 ]] ; then  
     echo -e "\e[1m[$(basename $0)] Installing PANDA with LLVM support ...\e[0m"
     ../../../src/avatar-panda/configure --disable-sdl --target-list=arm-softmmu --enable-llvm --with-llvm=/usr/local
 else
