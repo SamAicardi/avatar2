@@ -104,10 +104,12 @@ fi
 cd ../../build/panda/panda
 if [[ $build_llvm -eq 1 ]] ; then  
     echo -e "\e[1m[$(basename $0)] Installing PANDA with LLVM support ...\e[0m"
-    ../../../src/avatar-panda/configure --disable-sdl --target-list=arm-softmmu --enable-llvm --with-llvm=/usr/local
+    #../../../src/avatar-panda/configure --disable-sdl --target-list=arm-softmmu --enable-llvm --with-llvm=/usr/local
+    ../../../src/avatar-panda/configure --enable-sdl --target-list=arm-softmmu --enable-llvm --with-llvm=/usr/local
 else
     echo -e "\e[1m[$(basename $0)] Installing PANDA (no LLVM support) ...\e[0m"
-    ../../../src/avatar-panda/configure --disable-sdl --target-list=arm-softmmu
+    #../../../src/avatar-panda/configure --disable-sdl --target-list=arm-softmmu
+    ../../../src/avatar-panda/configure --enable-sdl --target-list=arm-softmmu
 fi
 make -j4
 
