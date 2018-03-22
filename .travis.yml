@@ -52,4 +52,5 @@ script:
     - docker exec ubuntu bash -c 'cd avatar2/ && python2 ./tests/hello_world.py'
     - docker exec ubuntu bash -c 'cd avatar2/ && python3 ./tests/hello_world.py'
 
+    - docker exec ubuntu bash -c 'cd avatar2/ && bash ./targets/build_panda.sh build-get-llvm'
 
