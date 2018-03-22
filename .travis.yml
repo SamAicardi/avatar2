@@ -39,6 +39,11 @@ install:
     - docker exec ubuntu bash -c 'cp /usr/local/lib/python2.7/dist-packages/usr/lib/python2.7/dist-packages/keystone/libkeystone.so /usr/local/lib/python2.7/dist-packages/keystone || true'
     - docker exec ubuntu bash -c 'cp /usr/local/lib/python3.5/dist-packages/usr/lib/python3/dist-packages/keystone/libkeystone.so /usr/local/lib/python3.5/dist-packages/keystone || true'
                                                     
+env:
+    - BUILD_OPTION=""
+    - BUILD_OPTION=build-llvm
+    - BUILD_OPTION=build-get-llvm
+
 script:
     - docker exec ubuntu bash -c 'cd avatar2/ && nosetests-2.7 ./tests/test_remote_memoryprotocol.py'
     - docker exec ubuntu bash -c 'cd avatar2/ && nosetests-2.7 ./tests/test_gdbprotocol.py'
@@ -52,5 +57,5 @@ script:
     - docker exec ubuntu bash -c 'cd avatar2/ && python2 ./tests/hello_world.py'
     - docker exec ubuntu bash -c 'cd avatar2/ && python3 ./tests/hello_world.py'
 
-    - docker exec ubuntu bash -c 'cd avatar2/ && bash ./targets/build_panda.sh build-get-llvm'
+    - docker exec ubuntu bash -c "cd avatar2/ && bash ./targets/build_panda.sh $BUILD_OPTION"
 
