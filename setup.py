@@ -25,6 +25,7 @@ setup(
         'capstone>=3.0.4',
         'keystone-engine',
         'parse',
+        'enum-compat',
     ],
     package_data={'avatar2/plugins/x86': ['avatar_fs.so']},
     url='http://www.s3.eurecom.fr/tools/avatar/',
