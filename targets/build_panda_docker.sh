@@ -2,33 +2,28 @@
 #==========================================================================
 # Usage: ./build_panda.sh [build-llvm | build-get-llvm [enable-llvm-debug]] 
 #==========================================================================
+# XXX: this script is designed to be executed in a docker container, Ubuntu Xenial (16.04)
 
 set -e
-
-distr=`cat /etc/issue`
-ci_distr="Ubuntu 16.04.3 LTS \n \l"
 
 #============================================
 #           Install dependencies
 #============================================
 echo -e "\e[1m[$(basename $0)] Installing dependencies ...\e[0m"
-#if [[ "$distr" == "$ci_distr" ]]
-#then
-  sh -c 'echo "deb-src http://archive.ubuntu.com/ubuntu/ xenial-security main restricted" >> /etc/apt/sources.list'
-  apt-get update
-  apt-get build-dep -y qemu
+sh -c 'echo "deb-src http://archive.ubuntu.com/ubuntu/ xenial-security main restricted" >> /etc/apt/sources.list'
+apt-get update
+apt-get build-dep -y qemu
 
-  # panda-specific deps below, taken from panda/scripts/install_ubuntu.sh
-  apt-get -y install python-pip git protobuf-compiler protobuf-c-compiler libprotobuf-c0-dev libprotoc-dev libelf-dev libc++-dev pkg-config
-  apt-get -y install software-properties-common
-  add-apt-repository -y ppa:phulin/panda
+# panda-specific deps below, taken from panda/scripts/install_ubuntu.sh
+apt-get -y install python-pip git protobuf-compiler protobuf-c-compiler libprotobuf-c0-dev libprotoc-dev libelf-dev libc++-dev pkg-config
+apt-get -y install software-properties-common
+add-apt-repository -y ppa:phulin/panda
 
-  apt-get -y install subversion
-  apt-get -y install libcapstone-dev libdwarf-dev python-pycparser
+apt-get -y install subversion
+apt-get -y install libcapstone-dev libdwarf-dev python-pycparser
 
-  # TODO: check if required
-  apt-get -y install libglib2.0-dev zlib1g-dev
-#fi
+# TODO: check if required
+apt-get -y install libglib2.0-dev zlib1g-dev
 
 
 #============================================
@@ -46,12 +41,6 @@ git submodule update --init dtc
 #                    Misc
 #============================================
 mkdir -p ../../build/panda/panda
-
-# TODO: check if it is required
-#chown -R root:root ../../ # i.e. /home/vagrant/avatar2/targets
-
-# install svn
-apt-get install subversion
 
 #============================================
 #         Download or prepare LLVM
@@ -87,23 +76,19 @@ popd # src/avatar-panda
 if [[ $build_llvm -eq 1 ]] ; then
     pushd .
     cd panda/llvm
+    mkdir /usr/local/llvm3.3
     if [[ $2 == "enable-llvm-debug" ]] ; then
         echo -e "\e[1m[$(basename $0)] Configuring and making LLVM in debug mode ...\e[0m"
-        ./configure --disable-optimized --enable-debug-runtime --enable-targets=host,arm && REQUIRES_RTTI=1 make -j $(nproc)
+        ./configure --prefix=/usr/local/llvm3.3 --disable-optimized --enable-debug-runtime --enable-targets=host,arm && REQUIRES_RTTI=1 make -j $(nproc)
     else
         echo -e "\e[1m[$(basename $0)] Configuring and making LLVM in release mode ...\e[0m"
-        ./configure --enable-optimized --disable-assertions --enable-targets=host,arm && REQUIRES_RTTI=1 make -j $(nproc)
+        ./configure --prefix=/usr/local/llvm3.3 --enable-optimized --disable-assertions --enable-targets=host,arm && REQUIRES_RTTI=1 make -j $(nproc)
     fi
     # install llvm3.3 under /usr/local/
-    echo -e "\e[1m[$(basename $0)] Installing LLVM in /usr/local/ ...\e[0m"
+    echo -e "\e[1m[$(basename $0)] Installing LLVM in /usr/local/llvm3.3 ...\e[0m"
     make install
     popd
 fi
-
-
-apt-get install zlib1g-dev
-#remove
-#cd `dirname "$BASH_SOURCE"`/src/avatar-panda
 
 #============================================
 #             Install PANDA
@@ -112,7 +97,7 @@ cd ../../build/panda/panda
 if [[ $build_llvm -eq 1 ]] ; then
     echo -e "\e[1m[$(basename $0)] Installing PANDA with LLVM support ...\e[0m"
     #../../../src/avatar-panda/configure --disable-sdl --target-list=arm-softmmu --enable-llvm --with-llvm=/usr/local
-    ../../../src/avatar-panda/configure --enable-sdl --target-list=arm-softmmu --enable-llvm --with-llvm=/usr/local
+    ../../../src/avatar-panda/configure --enable-sdl --target-list=arm-softmmu --enable-llvm --with-llvm=/usr/local/llvm3.3
 else
     echo -e "\e[1m[$(basename $0)] Installing PANDA (no LLVM support) ...\e[0m"
     #../../../src/avatar-panda/configure --disable-sdl --target-list=arm-softmmu
